@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سوقنا - سلطنة عمان</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <span class="text-2xl font-bold text-red-600"><i class="fa-solid fa-store ml-2"></i>سوقنا <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded">عمان</span></span>
+            </div>
+            
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <button onclick="openModal('add-product-modal')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center shadow">
+                    <i class="fa-solid fa-plus ml-1"></i> أضف سلعتك
+                </button>
+                <button onclick="toggleCart()" class="relative text-gray-700 hover:text-red-600 p-2">
+                    <i class="fa-solid fa-cart-shopping text-xl"></i>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero / Search Section -->
+    <section class="bg-gradient-to-r from-red-600 to-rose-700 text-white py-12 px-4 text-center">
+        <div class="max-w-2xl mx-auto">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">سوقنا - بيع وشراء بسهولة في سلطنة عمان</h1>
+            <p class="text-red-100 mb-6">صور سلعك واعرضها للبيع فوراً، والتوصيل على البائع</p>
+            <div class="bg-white p-2 rounded-xl shadow-lg flex items-center">
+                <input type="text" id="search-input" placeholder="ابحث عن سلعة..." class="w-full px-4 py-2 text-gray-800 focus:outline-none">
+                <button onclick="filterProducts()" class="bg-red-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-red-700">بحث</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <h2 class="text-xl font-bold mb-6 text-gray-800 border-r-4 border-red-600 pr-3">السلع المعروضة</h2>
+        
+        <!-- Products Grid -->
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- المنتجات المعروضة -->
+        </div>
+    </main>
+
+    <!-- Cart Drawer -->
+    <div id="cart-drawer" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex justify-end">
+        <div class="bg-white w-full max-w-md h-full p-6 flex flex-col shadow-xl overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-4">
+                <h3 class="text-lg font-bold">سلة المشتريات</h3>
+                <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+            </div>
+            
+            <div id="cart-items" class="flex-1 py-4 space-y-4">
+                <!-- عناصر السلة -->
+            </div>
+
+            <div class="border-t pt-4 space-y-4">
+                <div class="flex justify-between font-bold text-lg">
+                    <span>المجموع:</span>
+                    <span id="cart-total">0.000 ر.ع</span>
+                </div>
+
+                <!-- خيارات طرق الدفع الشاملة -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-gray-700">اختر طريقة الدفع:</label>
+                    <div class="space-y-2 text-sm">
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="payment-method" value="visa" checked class="ml-2">
+                            <i class="fa-brands fa-cc-visa text-blue-600 ml-2 text-lg"></i> بطاقة ائتمان / فيزا / ماستركارد
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="payment-method" value="apple-pay" class="ml-2">
+                            <i class="fa-brands fa-apple-pay ml-2 text-xl"></i> Apple Pay / Google Pay
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="payment-method" value="thawani" class="ml-2">
+                            <i class="fa-solid fa-wallet text-red-600 ml-2"></i> المحافظ الرقمية (ثواني / بنك مسقط)
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="payment-method" value="cash" class="ml-2">
+                            <i class="fa-solid fa-hand-holding-dollar text-green-600 ml-2"></i> الدفع النقدي عند الاستلام
+                        </label>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-800">
+                    <i class="fa-solid fa-circle-info ml-1"></i> سياسة التوصيل: <strong>التوصيل على البائع</strong> (سيتم التواصل معك لتنسيق التوصيل).
+                </div>
+
+                <button onclick="checkout()" class="w-full bg-red-600 text-white py-3 rounded-xl font-semibold hover:bg-red-700 shadow">إتمام الطلب الآن</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Add Product -->
+    <div id="add-product-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 class="text-lg font-bold">إضافة سلعة جديدة للبيع</h3>
+                <button onclick="closeModal('add-product-modal')" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+            </div>
+            
+            <form id="add-product-form" onsubmit="addProduct(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">رابط صورة السلعة <span class="text-red-500 font-bold">* (إلزامي)</span></label>
+                    <input type="url" id="p-image" required placeholder="ضع رابط صورة السلعة هنا..." class="w-full border rounded-lg p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">اسم السلعة <span class="text-red-500 font-bold">* (إلزامي)</span></label>
+                    <input type="text" id="p-name" required placeholder="مثال: آيفون 15 برو مستعمل" class="w-full border rounded-lg p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">وصف السلعة <span class="text-red-500 font-bold">* (إلزامي)</span></label>
+                    <textarea id="p-desc" required rows="2" placeholder="اكتب تفاصيل وحالة السلعة..." class="w-full border rounded-lg p-2.5 text-sm"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">السعر (بالريال العماني) <span class="text-red-500 font-bold">*</span></label>
+                        <input type="number" step="0.001" id="p-price" required placeholder="مثال: 250.000" class="w-full border rounded-lg p-2.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">الولاية / المدينة <span class="text-red-500 font-bold">*</span></label>
+                        <input type="text" id="p-location" required placeholder="مثال: مسقط - السيب" class="w-full border rounded-lg p-2.5 text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">اسم التاجر ورقم التواصل <span class="text-red-500 font-bold">* (إلزامي)</span></label>
+                    <input type="text" id="p-seller" required placeholder="مثال: أحمد (+968 91234567)" class="w-full border rounded-lg p-2.5 text-sm">
+                </div>
+                <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-xl font-semibold hover:bg-red-700">نشر السلعة في سوقنا</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        let products = JSON.parse(localStorage.getItem('sooqna_products')) || [];
+        let cart = [];
+
+        function saveProducts() {
+            localStorage.setItem('sooqna_products', JSON.stringify(products));
+        }
+
+        function renderProducts(items = products) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            if(items.length === 0) {
+                grid.innerHTML = '<p class="col-span-full text-center text-gray-500 py-12">لا توجد سلع معروضة حالياً. اضغط على "أضف سلعتك" لنشر أول سلعة!</p>';
+                return;
+            }
+            items.forEach(p => {
+                grid.innerHTML += `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col justify-between">
+                        <img src="${p.image}" alt="${p.name}" class="w-full h-48 object-cover">
+                        <div class="p-4 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-lg mb-1">${p.name}</h3>
+                                <p class="text-xs text-gray-600 mb-2 bg-gray-50 p-2 rounded">${p.desc}</p>
+                                <p class="text-red-600 font-bold mb-2">${p.price.toFixed(3)} ر.ع</p>
+                                <p class="text-xs text-gray-500 mb-1"><i class="fa-solid fa-location-dot ml-1"></i> الموقع: ${p.location}</p>
+                                <p class="text-xs text-gray-500 mb-1"><i class="fa-solid fa-user ml-1"></i> التاجر: ${p.seller}</p>
+                                <p class="text-xs text-green-600 font-semibold mb-4"><i class="fa-solid fa-truck ml-1"></i> التوصيل: على البائع</p>
+                            </div>
+                            <button onclick="addToCart(${p.id})" class="w-full bg-gray-900 hover:bg-red-600 text-white py-2 rounded-xl text-sm font-medium transition">إضافة إلى السلة</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            cart.push(product);
+            updateCartUI();
+            toggleCart();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const container = document.getElementById('cart-items');
+            container.innerHTML = '';
+            let total = 0;
+            
+            if(cart.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-400 py-4">السلة فارغة</p>';
+            }
+
+            cart.forEach((item, index) => {
+                total += item.price;
+                container.innerHTML += `
+                    <div class="flex justify-between items-center border-b pb-3">
+                        <div>
+                            <h4 class="font-semibold text-sm">${item.name}</h4>
+                            <span class="text-xs text-red-600 font-bold">${item.price.toFixed(3)} ر.ع</span>
+                            <p class="text-[10px] text-green-600 font-medium">التوصيل على البائع (${item.seller})</p>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+            document.getElementById('cart-total').innerText = total.toFixed(3) + ' ر.ع';
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function addProduct(e) {
+            e.preventDefault();
+            const newProduct = {
+                id: Date.now(),
+                name: document.getElementById('p-name').value,
+                desc: document.getElementById('p-desc').value,
+                price: parseFloat(document.getElementById('p-price').value),
+                location: document.getElementById('p-location').value,
+                seller: document.getElementById('p-seller').value,
+                image: document.getElementById('p-image').value
+            };
+            products.unshift(newProduct);
+            saveProducts();
+            renderProducts();
+            closeModal('add-product-modal');
+            document.getElementById('add-product-form').reset();
+            alert('تم نشر السلعة بنجاح في سوقنا!');
+        }
+
+        function checkout() {
+            if(cart.length === 0) {
+                alert('السلة فارغة!');
+                return;
+            }
+            const selectedPayment = document.querySelector('input[name="payment-method"]:checked').value;
+            alert('تم استلام طلبك بنجاح!\nطريقة الدفع: ' + selectedPayment + '\nسيقوم البائع بالتواصل معك لتنسيق تفاصيل التوصيل.');
+            cart = [];
+            updateCartUI();
+            toggleCart();
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.location.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
+            renderProducts(filtered);
+        }
+
+        renderProducts();
+    </script>
+</body>
+</html>
